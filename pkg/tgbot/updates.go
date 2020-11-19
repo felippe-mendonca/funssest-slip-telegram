@@ -29,7 +29,20 @@ const (
 )
 
 func isCPFRequest(msg *tgbotapi.Message) bool {
+	if msg == nil {
+		return false
+	}
+	if msg.ReplyToMessage == nil {
+		return false
+	}
 	return msg.ReplyToMessage.Text == requestCPFMessage && msg.ReplyToMessage.From.IsBot
+}
+
+func isCommand(msg *tgbotapi.Message) bool {
+	if msg == nil {
+		return false
+	}
+	return msg.IsCommand()
 }
 
 func makeSlipMessageKeyboard(slip funssest.FunssestSlip) tgbotapi.InlineKeyboardMarkup {
@@ -108,7 +121,7 @@ func processCPFRequest(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 func ProcessUpdate(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	if update.CallbackQuery != nil {
 		replySlipNumber(bot, update)
-	} else if update.Message != nil && update.Message.IsCommand() {
+	} else if isCommand(update.Message) {
 		processCommand(bot, update)
 	} else if isCPFRequest(update.Message) {
 		processCPFRequest(bot, update)
