@@ -25,7 +25,7 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhook(telegramWebhookURL + "/" + bot.Token))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhook(telegramWebhookURL + "/updates"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func main() {
 	if info.LastErrorDate != 0 {
 		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
-	updates := bot.ListenForWebhook("/" + bot.Token)
+	updates := bot.ListenForWebhook("/updates")
 	go http.ListenAndServe(httpListenServer, nil)
 
 	for update := range updates {
