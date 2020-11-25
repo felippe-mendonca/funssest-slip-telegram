@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -8,18 +9,32 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 
+	"funssest-slip-telegram/pkg/secrets"
 	"funssest-slip-telegram/pkg/tgbot"
 )
 
 func main() {
-	telegramAccessToken := os.Getenv("TELEGRAM_ACCESS_TOKEN")
+
 	telegramWebhookURL := os.Getenv("TELEGRAM_WEBHOOK_URL")
 	telegramDebug, _ := strconv.ParseBool(os.Getenv("TELEGRAM_DEBUG"))
 	httpListenServer := os.Getenv("HTTP_LISTEN_SERVER")
+	telegramAccessTokenSecret := os.Getenv("TELEGRAM_ACCESS_TOKEN_SECRET")
+
+	ctx := context.Background()
+	sm, err := secrets.NewSecretManager(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	telegramAccessToken, err := sm.GetSecret(ctx, telegramAccessTokenSecret)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Configuration successfully loaded")
 
 	bot, err := tgbotapi.NewBotAPI(telegramAccessToken)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	bot.Debug = telegramDebug
 

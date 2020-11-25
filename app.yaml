@@ -1,0 +1,8 @@
+runtime: go114
+instance_class: F1
+env_variables:
+  TELEGRAM_ACCESS_TOKEN_SECRET: "projects/funssest-slip-telegram/secrets/telegram-access-token"
+  TELEGRAM_WEBHOOK_URL: "https://funssest-slip-telegram.uc.r.appspot.com"
+  TELEGRAM_DEBUG: false
+  HTTP_LISTEN_SERVER: "0.0.0.0:8080"
+
